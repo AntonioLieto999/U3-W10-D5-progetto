@@ -37,14 +37,14 @@ function HomePage() {
     <Container className="mt-5">
       <h1>Meteo</h1>
       <Form onSubmit={handleSubmit}>
-        <Form.group>
-          <Form.control
+        <Form.Group>
+          <Form.Control
             type="text"
             placeholder="Inserisci una città"
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
-        </Form.group>
+        </Form.Group>
         <Button variant="primary" type="submit" className="mt-3">
           Cerca
         </Button>
@@ -52,4 +52,5 @@ function HomePage() {
     </Container>
   );
 }
+
 export default HomePage;
