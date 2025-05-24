@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Row, Col, Card, Spinner, Alert } from "react-bootstrap";
+import background from "../assets/background.png";
 
 function Details() {
   const { city } = useParams();
@@ -50,50 +51,117 @@ function Details() {
 
   if (loading) {
     return (
-      <Container className="mt-5 text-center">
+      <Container
+        className="text-center"
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Spinner animation="border" />
       </Container>
     );
   }
+
   if (error) {
     return (
-      <Container className="mt-5">
+      <Container
+        className="text-center"
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Alert variant="danger">{error}</Alert>
       </Container>
     );
   }
 
   return (
-    <Container className="mt-5">
-      <h2>Meteo attuale a {current.name}</h2>
-      <Card className="mb-4">
-        <Card.Body>
-          <Card.Title>{current.weather[0].description}</Card.Title>
-          <Card.Text>Temperatura: {current.main.temp}°C</Card.Text>
-        </Card.Body>
-      </Card>
+    <div
+      style={{
+        minHeight: "100vh",
+        backgroundImage: `url(${background})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        paddingTop: "3rem",
+        paddingBottom: "3rem",
+      }}
+    >
+      <Container style={{ maxWidth: "900px" }}>
+        <Card
+          className="mb-4 shadow text-center"
+          style={{
+            backgroundColor: "#bbdefb",
+            borderRadius: "1rem",
+            border: "2px solid #1976d2",
+            padding: "1rem",
+          }}
+        >
+          <Card.Body>
+            <h2 style={{ color: "#1565c0" }}>☀️ Meteo attuale a {current.name}</h2>
+            <p className="fs-5 text-capitalize mt-3">
+              <strong>Condizioni:</strong> {current.weather[0].description}
+            </p>
+            <p className="fs-5">
+              <strong>Temperatura:</strong> {current.main.temp}°C
+            </p>
+            <p className="fs-5">
+              <strong>Umidità:</strong> {current.main.humidity}%
+            </p>
+          </Card.Body>
+        </Card>
 
-      <h3>Previsioni per i prossimi 5 giorni</h3>
-      {Object.keys(forecast).map((day) => (
-        <div key={day} className="mb-4">
-          <h5>{day}</h5>
-          <Row>
-            {forecast[day].map((item) => (
-              <Col key={item.dt} sm={6} md={4} lg={2}>
-                <Card className="mb-2">
-                  <Card.Body>
-                    <Card.Subtitle>{item.dt_txt.split(" ")[1]}</Card.Subtitle>
-                    <Card.Text>{item.main.temp}°C</Card.Text>
-                    <Card.Text>{item.weather[0].main}</Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </div>
-      ))}
-    </Container>
+        <h3 className="text-center mb-4 text-secondary">📅 Previsioni prossimi 5 giorni</h3>
+
+        {Object.entries(forecast).map(([date, items]) => (
+          <Card
+            key={date}
+            className="mb-4 shadow"
+            style={{
+              backgroundColor: "#f1f8e9",
+              borderRadius: "0.75rem",
+              border: "2px solid #4caf50",
+              padding: "1rem",
+            }}
+          >
+            <Card.Body>
+              <h5 className="text-success text-center mb-3">📆 Giorno: {date}</h5>
+              <Row className="justify-content-center">
+                <Col md={10}>
+                  <ul className="list-unstyled mb-0">
+                    {items.map((item) => (
+                      <li
+                        key={item.dt}
+                        className="border-bottom py-2"
+                        style={{
+                          fontSize: "1rem",
+                          borderBottom: "1px solid #c8e6c9",
+                          paddingBottom: "0.5rem",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
+                        <strong>Orario:</strong> {item.dt_txt.split(" ")[1].slice(0, 5)} |{" "}
+                        <strong>Temperatura:</strong> {item.main.temp}°C |{" "}
+                        <strong>Condizioni:</strong> {item.weather[0].main}
+                      </li>
+                    ))}
+                  </ul>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        ))}
+      </Container>
+    </div>
   );
 }
-
 export default Details;
